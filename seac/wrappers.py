@@ -7,7 +7,7 @@ import gym
 import numpy as np
 from gym import ObservationWrapper, spaces
 from gym.wrappers import TimeLimit as GymTimeLimit
-from gym.wrappers import Monitor as GymMonitor
+from gym.wrappers.record_video import RecordVideo as GymMonitor
 
 
 class RecordEpisodeStatistics(gym.Wrapper):

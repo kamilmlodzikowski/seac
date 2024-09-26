@@ -1,12 +1,12 @@
 import torch
 import rware
-import lbforaging
+# import lbforaging
 import gym
 
 from a2c import A2C
 from wrappers import RecordEpisodeStatistics, TimeLimit, Monitor
 
-path = "pretrained/rware-small-4ag"
+path = "/home/kamil/Documents/seac/seac/pretrained/rware-small-4ag"
 env_name = "rware-small-4ag-v1"
 time_limit = 500 # 25 for LBF
 
@@ -22,7 +22,7 @@ for agent in agents:
 
 for ep in range(EPISODES):
     env = gym.make(env_name)
-    env = Monitor(env, f"seac_rware-small-4ag_eval/video_ep{ep+1}", mode="evaluation")
+    # env = Monitor(env, f"seac_rware-small-4ag_eval/video_ep{ep+1}")
     env = TimeLimit(env, time_limit)
     env = RecordEpisodeStatistics(env)
 
