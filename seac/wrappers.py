@@ -7,7 +7,7 @@ import gym
 import numpy as np
 from gym import ObservationWrapper, spaces
 from gym.wrappers import TimeLimit as GymTimeLimit
-from gym.wrappers.record_video import RecordVideo as GymMonitor
+# from gym.wrappers.record_video import RecordVideo as GymMonitor
 
 
 class RecordEpisodeStatistics(gym.Wrapper):
@@ -111,19 +111,19 @@ class ClearInfo(gym.Wrapper):
         return observation, reward, done, {}
 
 
-class Monitor(GymMonitor):
-    def _after_step(self, observation, reward, done, info):
-        if not self.enabled: return done
+# class Monitor(GymMonitor):
+#     def _after_step(self, observation, reward, done, info):
+#         if not self.enabled: return done
 
-        if all(done) and self.env_semantics_autoreset:
-            # For envs with BlockingReset wrapping VNCEnv, this observation will be the first one of the new episode
-            self.reset_video_recorder()
-            self.episode_id += 1
-            self._flush()
+#         if all(done) and self.env_semantics_autoreset:
+#             # For envs with BlockingReset wrapping VNCEnv, this observation will be the first one of the new episode
+#             self.reset_video_recorder()
+#             self.episode_id += 1
+#             self._flush()
 
-        # Record stats
-        self.stats_recorder.after_step(observation, sum(reward), all(done), info)
-        # Record video
-        self.video_recorder.capture_frame()
+#         # Record stats
+#         self.stats_recorder.after_step(observation, sum(reward), all(done), info)
+#         # Record video
+#         self.video_recorder.capture_frame()
 
-        return done
+#         return done
