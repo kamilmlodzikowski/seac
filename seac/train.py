@@ -7,6 +7,8 @@ from collections import deque
 from os import path
 from pathlib import Path
 
+import gymnasium as gym
+
 import numpy as np
 import torch
 from sacred import Experiment
@@ -26,6 +28,11 @@ from model import Policy
 
 # import robotic_warehouse # noqa
 # import lbforaging # noqa
+from rlmapf_wrapper import GymRLMAPF
+print("Imported rlmapf_wrapper")
+
+print("Imported envs")
+print(gym.envs.registry.keys())
 
 ex = Experiment(ingredients=[algorithm])
 ex.captured_out_filter = lambda captured_output: "Output capturing turned off."
