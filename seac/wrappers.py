@@ -3,10 +3,10 @@ import math
 from collections import deque
 from time import perf_counter
 
-import gym
+import gymnasium as gym
 import numpy as np
-from gym import ObservationWrapper, spaces
-from gym.wrappers import TimeLimit as GymTimeLimit
+from gymnasium import ObservationWrapper, spaces
+from gymnasium.wrappers import TimeLimit as GymTimeLimit
 # from gym.wrappers.record_video import RecordVideo as GymMonitor
 
 
@@ -15,23 +15,35 @@ class RecordEpisodeStatistics(gym.Wrapper):
 
     def __init__(self, env, deque_size=100):
         super().__init__(env)
+        self.env = env
         self.t0 = perf_counter()
-        self.episode_reward = np.zeros(self.n_agents)
+        self.episode_reward = np.zeros(self._get_n_agents(env))
         self.episode_length = 0
         self.reward_queue = deque(maxlen=deque_size)
         self.length_queue = deque(maxlen=deque_size)
 
+    def _get_n_agents(self, env):
+        while hasattr(env, 'env'):
+            if hasattr(env, 'n_agents'):
+                return env.n_agents
+            env = env.env
+        return env.n_agents
+
     def reset(self, **kwargs):
         observation = super().reset(**kwargs)
-        self.episode_reward = 0
+        self.episode_reward = np.zeros(self._get_n_agents(self.env))
         self.episode_length = 0
         self.t0 = perf_counter()
 
         return observation
 
     def step(self, action):
-        observation, reward, done, info = super().step(action)
+        observation, reward, terminated, truncated, info = super().step(action)
+        print("OB:", len(observation))
+        done = [terminated, truncated]
+        reward = sum(reward.values())
         self.episode_reward += np.array(reward, dtype=np.float64)
+        print("REWARD:",self.episode_reward)
         self.episode_length += 1
         if all(done):
             info["episode_reward"] = self.episode_reward
@@ -78,7 +90,8 @@ class SquashDones(gym.Wrapper):
 
     def step(self, action):
         observation, reward, done, info = self.env.step(action)
-        return observation, reward, all(done), info
+        # done = all(terminated) or all(truncated)
+        return observation[0], reward, all(done), info
 
 
 class GlobalizeReward(gym.RewardWrapper):

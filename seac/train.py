@@ -29,10 +29,6 @@ from model import Policy
 # import robotic_warehouse # noqa
 # import lbforaging # noqa
 from rlmapf_wrapper import GymRLMAPF
-print("Imported rlmapf_wrapper")
-
-print("Imported envs")
-print(gym.envs.registry.keys())
 
 ex = Experiment(ingredients=[algorithm])
 ex.captured_out_filter = lambda captured_output: "Output capturing turned off."
@@ -197,9 +193,13 @@ def main(
         for i, (osp, asp) in enumerate(zip(envs.observation_space, envs.action_space))
     ]
     obs = envs.reset()
-
+    print("obs")
+    print(len(obs))
+    print(obs)
     for i in range(len(obs)):
-        agents[i].storage.obs[0].copy_(obs[i])
+        print((len(obs[i])))
+        print(len(agents[i].storage.obs[0]))
+        agents[i].storage.obs[0] = obs[i]
         agents[i].storage.to(algorithm["device"])
 
     start = time.time()
@@ -237,6 +237,7 @@ def main(
                     for info in infos
                 ]
             )
+            print("REWWW", reward)
             for i in range(len(agents)):
                 agents[i].storage.insert(
                     obs[i],
@@ -244,7 +245,7 @@ def main(
                     n_action[i],
                     n_action_log_prob[i],
                     n_value[i],
-                    reward[:, i].unsqueeze(1),
+                    reward[i],
                     masks,
                     bad_masks,
                 )

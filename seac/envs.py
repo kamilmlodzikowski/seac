@@ -3,11 +3,11 @@ import os
 import gymnasium as gym
 import numpy as np
 import torch
-from gym.spaces.box import Box
+from gymnasium.spaces.box import Box
 # from gym.wrappers import Monitor
 
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnvWrapper
-from stable_baselines3.common.vec_env.vec_video_recorder import VecVideoRecorder
+# from stable_baselines3.common.vec_env.vec_video_recorder import VecVideoRecorder
 from stable_baselines3.common.vec_env.vec_normalize import VecNormalize as VecNormalize_
 from wrappers import TimeLimit #, Monitor
 
@@ -23,7 +23,8 @@ def make_env(env_id, seed, rank, time_limit, wrappers, monitor_dir):
     def _thunk():
 
         env = gym.make(env_id)
-        env.seed(seed + rank)
+        # env.seed(seed + rank)
+        env.reset(seed=seed + rank)
 
         if time_limit:
             env = TimeLimit(env, time_limit)

@@ -33,7 +33,7 @@ def config():
 
     seac_coef = 1.0
 
-    num_processes = 4
+    num_processes = 2
     num_steps = 5
 
     device = "cpu"
@@ -70,6 +70,8 @@ class A2C:
             num_steps,
             num_processes,
         )
+        print(obs_space)
+        print(self.storage.obs.size())
 
         self.model.to(device)
         self.optimizer = optim.Adam(self.model.parameters(), lr, eps=adam_eps)
